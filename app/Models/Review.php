@@ -24,17 +24,21 @@ class Review extends Model
         
         static::saved(function ($review) {
             // レビューが保存された後、関連するショップのレビュー平均を更新
-            $review->shop->updateReviewAvg();
+            if($review->shop){
+                $review->shop->updateReviewAvg();
+            }
         });
 
         static::deleted(function ($review) {
             // レビューが削除された後、関連するショップのレビュー平均を更新
-            $review->shop->updateReviewAvg();
+            if($review->shop){
+                $review->shop->updateReviewAvg();
+            }
         });
     }
     
     public function shop(){
-        return $this->shop(Shop::class);
+        return $this->belongsTo(Shop::class);
     }
     
     public function user(){

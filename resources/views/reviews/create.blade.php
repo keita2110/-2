@@ -2,38 +2,41 @@
 <html lang="ja">
     <head>
         <meta charset="utf-8">
-        <title>口コミ編集</title>
+        <title>口コミ投稿ページ</title>
     </head>
     <body>
     <x-app-layout>
         <x-slot name="header">
-        　TopPage
+            CreateReview
         </x-slot>
-            <h1>{{ $review->shop ? $review->shop->name : 'Shop not available' }}</h1>  
-            <form action="/reviews/{{ $review->id }}/show" method="POST">{{--要確認--}}
+        
+            <form action="/reviews" method="POST">{{--要確認--}}
                 @csrf
-                @method('PUT')
+                
+                <input type="hidden" name="post[shop_id]" value="{{ $shop->id}}" />
                 
                 <div class="review">
                     <h2>評価</h2>
-                    <input type="number" name="post[review]" min="1" max="5" value={{ $review->review }} ></input>{{--name属性について--}}
+                    <input type="number" name="post[review]" min="1" max="5" />{{--name属性について--}}
                 </div>
                 
                 <div class="comment">
                     <h2>口コミ</h2>
-                    <textarea name="post[body]" placeholder="お好きなコメントをどうぞ">{{ $review->body }}</textarea>
+                    <textarea name="post[body]" placeholder="お好きなコメントをどうぞ" >{{ old('post.body') }}</textarea>
                     <p class="body__error" style="color:red">{{ $errors->first('post.body') }}</p>
                 </div>
                 
                 <div class="image">
                     <h2>画像</h2>
-                    <input type="file" name=post[review_image_url] accept="image/png, image/jpeg">
+                    <input type="file" name=post[review_image_url] accept="image/png, image/jpeg" />
                 </div>
                 
                 <input type="submit" value="保存"/>
                 
             </form>
-           
+            <div class="footer">
+                <a href="/">戻る</a>
+    
     </x-app-layout>
     </body>
 </html>

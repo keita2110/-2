@@ -59,7 +59,7 @@
         </div>
         
         <div class="map">{{--編集--}}
-            {{ }}
+            
         </div>
         
         <div class="image">

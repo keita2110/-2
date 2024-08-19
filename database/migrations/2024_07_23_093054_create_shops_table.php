@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name', 50);
             $table->string('menu', 300)->nullable();
             $table->string('reserve', 50)->nullable();
-            $table->time('open_time')->nullable();
-            $table->time('close_time')->nullable();
+            $table->string('open_time',20)->nullable();
+            $table->string('close_time',20)->nullable();
             $table->string('phone', 20)->nullable();
             $table->integer('min_price')->nullable();
             $table->integer('max_price')->nullable();

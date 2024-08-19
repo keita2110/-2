@@ -9,37 +9,47 @@ use App\Http\Requests\ReviewRequest;
 
 class ReviewController extends Controller
 {
-    public function review(){
-        return view('reviews.review');
+    public function create(Shop $shop){
+        return view('reviews.create',[
+            'shop' => $shop,
+        ]);
     } 
     
-    public function edit2(Review $review){
-        return view('reviews.edit2')->with(['review' => $review]);
+    public function reviewEdit(Review $review, Shop $shop){
+        $review=Review::find($review->id);
+        
+        return view('reviews.reviewEdit',[
+            'review' => $review,
+            'shop' => $shop,
+        ]);
+    }
+    
+    public function edit2(Shop $shop, Review $review){
+        return view('reviews.edit2',[
+            'shop' => $shop,
+            'review' => $review,
+        ]);
     }
     
     public function update2(ReviewRequest $request,Review $review){
-        $input_review = $request['review'];
-        $review->fill($input_review)->save();
-        return redirect('/reviews/{review}/show.'.$review->id);
+        $input=$request['post'];
+        $review->fill($input)->save();
+        return redirect("/reviews/{$review->id}/show/");
     }
     
     public function delete2(Review $review){
         $review->delete();
-        return redirect('/shops/{shop}');
+        return redirect("/shops/{$review->shop_id}/show");
     }
     
-    public function store2(ReviewRequest $request, Review $review){//要検討
+    public function store(ReviewRequest $request, Review $review){//要検討
         //auth()->user()メソッドを使用してログイン中のユーザーオブジェクトを取得しidを取得
-        $userId = auth()->id();
-        
-        $input = $request['review'];
-        //$input_tags = $request->tags_array;
-        
-        $input['user_id'] = $userId;
+        $userId = auth()->user()->id;
+        $input = $request['post'];
+        $input['user_id']=$userId;
         
         $review->fill($input)->save();
         
-        //$shop->ramen_tags()->attach($input_tags);
-        return redirect('/reviews/{review}/show/'.$review->id);
+        return redirect("/reviews/{$review->id}/show/");
     }
 }

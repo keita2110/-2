@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('review')->nullable();
             $table->string('review_image_url')->nullable();
             
-            $table->foreignId('shop_id')->constrained()->onDelete('cascade');
+            $table->foreignId('shop_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             
             $table->timestamps();

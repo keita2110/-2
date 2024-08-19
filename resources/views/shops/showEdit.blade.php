@@ -14,10 +14,10 @@
         </x-slot>
         <h1 class="name">{{ $shop->name }}</h1>
         
-        <div class="review">
-            <h2>＜　評価　＞</h2>
-            {{ $shop->review_avg }}
-        </div>
+        <!--<div class="review">-->
+        <!--    <h2>＜　評価　＞</h2>-->
+        <!--    -->
+        <!--</div>-->
         
         <div class="shop_information">
         <h2>＜　店情報　＞</h2>
@@ -26,7 +26,7 @@
             </div>
             
             <div class="address">
-                <h3>住所：　</h3>{{ $shop->location->address }}
+                <h3>住所：　</h3>{{ $shop->location }}
             </div>
             
             <div class="time">
@@ -58,24 +58,17 @@
             {{ $shop->menu }}
         </div>
         
-        <div class="map">{{--編集--}}
-            {{ }}
-        </div>
+        <!--<div class="map">{{--編集--}}-->
+        <!--    -->
+        <!--</div>-->
         
         <div class="image">
             <img src="{{ $shop->shop_image_url }}" alt="Shop Image" />
         </div>
         
-        <div class="comment">
-            <h2>＜　口コミ　＞</h2>
-            @foreach($shop->reviews as $review)
-                <p>{{ $review->body }}</p>
-            @endforeach
-        </div>
-        
         <a href='/shops/{{ $shop->id }}/edit'>編集する</a>
         
-        <a href='/reviews/create'>口コミも書く</a>{{--後でreviewControllerから作業--}}
+        <a href="/reviews/create/{{$shop->id}}">評価と口コミも書く</a>{{--後でreviewControllerから作業--}}
         
         <form action="/shops/{{ $shop->id }}" id="form_{{ $shop->id }}" method="POST">
             @csrf
