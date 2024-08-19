@@ -30,22 +30,19 @@
                 <p class="name__error" style="color:red">{{$errors->first('shop.name')}}</p>
                 </div>
                 
-                <div class="review">
-                    <h2>評価</h2>
-                    <input type="number" name="shop[review]" min="1" max="5" value={{ $shop->$review->review }} />{{--わからん--}}
-                </div>
+                
                  
                 <div class="shop_informations"> 
                     <h2>店情報</h2>
                     
                     <div class="menu">
                         <h3>メニュー</h3>
-                        <textarea name="shop[menu]" placeholder="食べたメニューなど自由にどうぞ" value={{ $shop->menu }}></textarea>
+                        <textarea name="shop[menu]" placeholder="食べたメニューなど自由にどうぞ">{{ $shop->menu }}</textarea>
                     </div>
                     
                     <div class="location">
                         <h3>住所</h3>
-                        <textarea name="shop[location]" value={{ $shop->location }}></textarea>
+                        <textarea name="shop[location]">{{ $shop->location }}</textarea>
                     </div>
                     
                     <div class="reserve">
@@ -56,12 +53,12 @@
                     <div class="time">
                         <h3>営業時間</h3>
                         <div class="open_time">
-                            <input type="time" name="shop[open_time]" value={{ $shop->open_time }} ></input>～
+                            <input type="text" name="shop[open_time]" value={{ $shop->open_time }} ></input>～
                         </div>
                         
                         
                         <div class="close_time">
-                            <input type="time" name="shop[close_time]" value={{ $shop->close_time }} ></input>
+                            <input type="text" name="shop[close_time]" value={{ $shop->close_time }} ></input>
                         </div>
                     </div>
                     
@@ -82,19 +79,19 @@
                     </div>
                     
                     <div class="category">
-                        <h3>ラーメンの系統</h3>
-                        <select name="shop[shop_category_id]">
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
+                    <h3>ラーメンの系統</h3>
+                    <select name="shop[shop_category_id]">
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
                     </div>
                     
                     <div class="tag">
                         <h3>ラーメンの種類</h3>
                         @foreach($tags as $tag)
                             <label>
-                                <input type="checkbox" value"{{ $tag->id }}" name="tags_array[]">
+                                <input type="checkbox" value="{{ $tag->id }}" name="shop_tags_array[]">
                                     {{ $tag->name }}
                                 </input>
                             </label>

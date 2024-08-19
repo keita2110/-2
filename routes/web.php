@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\ReviewContrller;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,25 +22,24 @@ Route::controller(ShopController::class)->middleware(['auth'])->group(function()
     
     Route::get('/shops/create','create')->name('create');//店紹介
     Route::post('/shops','store')->name('shop_store');//店紹介の保存
+    Route::get('/shops/{shop}/show/','showEdit')->name('shop_show_show');
     
-    Route::get('/reviews/create', 'review')->name('review');//口コミ投稿
-    Route::post('/reviews','store2')->name('review_store');//口コミ投稿の保存
-    
-    // Route::get('/reviews/create2','create2')->name('review2');
-    // Route::post('/reviews','store3')->name('review_store2');
-    
-    Route::get('/reviews/{review}/edit','edit2')->name('review_edit');//口コミの編集
-    Route::put('/reviews/{review}','update2')->name('review_update');
-    Route::get('/reviews/{review}/show','reviewEdit')->name('review_edit_show');
-    Route::delete('/reviews/{review}','delete2')->name('review_delete');
-    //Route::get('/search', )->name('search');//編集
-    
-    Route::get('/shops/{shop}/edit','edit')->name('shop_edit');//店紹介の編集
-    Route::put('/shops/{shop}','update')->name('shop_update');//店情報の更新
-    Route::get('/shops/{shop}/show','showEdit')->name('shop_edit_show');
-    Route::delete('/shops/{shop}','delete')->name('shop_delete');
+    Route::get('/shops/searach','search')->name('shop.search');
     
     Route::get('/shops/{shop}','show')->name('shops_show');
+    Route::get('/shops/{shop}/edit','edit')->name('shop_edit');    
+    Route::put('/shops/{shop}/show/','update')->name('shop_update');
+    Route::delete('/shops/{shop}','delete')->name('shop_delete');
+});
+
+Route::controller(ReviewController::class)->middleware(['auth'])->group(function(){
+    Route::get('/reviews/create/{shop}', 'create')->name('review.create'); 
+    Route::post('/reviews', 'store')->name('review.store');
+    Route::get('/reviews/{review}/show/', 'reviewEdit')->name('review.show'); 
+    
+    Route::get('/reviews/{review}/edit', 'edit2')->name('review.edit'); 
+    Route::put('/reviews/{review}/show/', 'update2')->name('review.update'); 
+    Route::delete('/reviews/{review}', 'delete2')->name('review.delete'); 
 });
 
 Route::get('/dashboard', function () {

@@ -27,10 +27,10 @@
                 <p class="name__error" style="color:red">{{$errors->first('shop.name')}}</p>
             </div>
             
-            <div class="review">
-                <h2>評価</h2>
-                <input type="number" name="shop[review]" min="1" max="5"/>
-            </div>
+            <!--<div class="review">-->
+            <!--    <h2>評価</h2>-->
+            <!--    <input type="number" name="shop[review]" min="1" max="5"/>-->
+            <!--</div>-->
              
             <div class="shop_informations"> 
                 <h2>店情報</h2>
@@ -53,12 +53,12 @@
                 <div class="time">
                     <h3>営業時間</h3>
                     <div class="open_time">
-                        <input type="time" name="shop[open_time]" />～
+                        <input type="text" name="shop[open_time]" placeholder=11時 />～
                     </div>
                     
                     
                     <div class="close_time">
-                        <input type="time" name="shop[close_time]" />
+                        <input type="text" name="shop[close_time]" placeholder=23時 />
                     </div>
                 </div>
                 
@@ -91,7 +91,7 @@
                     <h3>ラーメンの種類</h3>
                     @foreach($tags as $tag)
                         <label>
-                            <input type="checkbox" value"{{ $tag->id }}" name="tags_array[]">
+                            <input type="checkbox" value="{{ $tag->id }}" name="tags_array[]">
                                 {{ $tag->name }}
                             </input>
                         </label>

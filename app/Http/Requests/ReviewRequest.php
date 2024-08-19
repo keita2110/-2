@@ -22,7 +22,8 @@ class ReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'review.body' => 'required|string|max:300',
+            'post.body' => 'required|string|max:300',
+            //'post.shop_id' => 'required|exists:shops,id',//'shops' テーブルの 'id' カラムを参照
         ];
     }
 }

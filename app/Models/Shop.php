@@ -24,6 +24,7 @@ class Shop extends Model
         'location_id',
         'shop_category_id',
         'user_id',
+        'location'
     ];
     
     //作ってから確認
@@ -38,7 +39,7 @@ class Shop extends Model
     }
     
     public function shop_category(){
-        return $this->hasMany(ShopCategory::class);
+        return $this->belongsto(ShopCategory::class);
     }
     
     public function user(){

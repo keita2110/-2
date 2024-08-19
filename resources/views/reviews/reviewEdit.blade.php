@@ -12,7 +12,9 @@
         <x-slot name="header">
         　ShowReview
         </x-slot>
-        <h1>{{ $review->shop->name }}</h1>
+        <!--<h1>{ $review->shop->name }}</h1>-->
+        <h1>{{ $review->shop ? $review->shop->name : 'Shop not available' }}</h1>
+
         
         <div class="review">
             <h2>＜　評価　＞</h2>
