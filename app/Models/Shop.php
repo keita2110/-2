@@ -15,6 +15,7 @@ class Shop extends Model
         'name',
         'reserve',
         'menu',
+        'review_avg',
         'open_time',
         'close_time',
         'phone',
@@ -24,13 +25,13 @@ class Shop extends Model
         'location_id',
         'shop_category_id',
         'user_id',
-        'location'
     ];
     
     //作ってから確認
     
     public function updateReviewAvg(){
         $avg = $this->reviews()->avg('review');
+        $avg = number_format($avg, 1);
         $this->update(['review_avg'=> $avg]);
     }
     
@@ -39,7 +40,7 @@ class Shop extends Model
     }
     
     public function shop_category(){
-        return $this->belongsto(ShopCategory::class);
+        return $this->belongsTo(ShopCategory::class);
     }
     
     public function user(){

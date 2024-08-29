@@ -37,6 +37,14 @@ class Review extends Model
         });
     }
     
+    public function likes(){
+        return $this->hasMany(Like::class);
+    }
+    
+    public function likeBy(User $user){//特定のユーザがこのレビューに対していいねしているか確認するメソッド
+        return $this->likes()->where('user_id',$user->id)->exists();
+    }
+    
     public function shop(){
         return $this->belongsTo(Shop::class);
     }

@@ -25,5 +25,9 @@ class ShopCategorySeeder extends Seeder
         DB::table('shop_categories')->insert([
             'name'=>'二郎系'
         ]);
+        
+        DB::table('shop_categories')->insert([
+            'name' => '該当なし'
+        ]);
     }
 }

@@ -28,7 +28,7 @@
         
         <div class="image">
             <h2>＜ 画像　＞</h2>
-            {{ $review->review_image_url }}
+            <img src="{{ $review->review_image_url }}" alt="画像の投稿はありません。">
         </div>
         
         <a href='/reviews/{{ $review->id }}/edit'>編集する</a>

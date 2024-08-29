@@ -10,7 +10,7 @@
             CreateReview
         </x-slot>
         
-            <form action="/reviews" method="POST">{{--要確認--}}
+            <form action="/reviews" method="POST" enctype="multipart/form-data">{{--要確認--}}
                 @csrf
                 
                 <input type="hidden" name="post[shop_id]" value="{{ $shop->id}}" />
@@ -28,7 +28,7 @@
                 
                 <div class="image">
                     <h2>画像</h2>
-                    <input type="file" name=post[review_image_url] accept="image/png, image/jpeg" />
+                    <input type="file" name="review_image">
                 </div>
                 
                 <input type="submit" value="保存"/>

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Posts</title>
+        <title>店詳細ページ</title>
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
     </head>
@@ -63,17 +63,30 @@
         </div>
         
         <div class="image">
-            <img src="{{ $shop->shop_image_url }}" alt="Shop Image" />
+            <h2>＜　画像　＞</h2>
+            <img src="{{ $shop->shop_image_url }}" alt="画像の投稿はありません。">
         </div>
         
         <div class="comment">
             <h2>＜　口コミ　＞</h2>
             @foreach($shop->reviews as $review)
+                <p>投稿者：{{ $review->user->name }}</p>
                 <p>{{ $review->body }}</p>
+                <p>いいねの数：{{ $review->likes->count() }}</p>
+                <form action="/reviews/{{ $review->id }}/like" method="POST">
+                    @csrf
+                    <button type="submit">
+                        @if($review->likeBy(Auth::user()))
+                            いいねを消す
+                        @else
+                            いいね
+                        @endif
+                    </button>
+                </form>
             @endforeach
         </div>
         
-        <a href='/reviews/create'>評価や口コミを書く</a>
+        <a href="/reviews/create/{{$shop->id}}">評価と口コミを書く</a>
         
          <div class="footer">
             <a href="/search">戻る</a>

@@ -10,7 +10,7 @@
         　TopPage
         </x-slot>
             <h1>{{ $review->shop ? $review->shop->name : 'Shop not available' }}</h1>  
-            <form action="/reviews/{{ $review->id }}/show" method="POST">{{--要確認--}}
+            <form action="/reviews/{{ $review->id }}/show" method="POST" enctype="multipart/form-data">{{--要確認--}}
                 @csrf
                 @method('PUT')
                 
@@ -27,7 +27,7 @@
                 
                 <div class="image">
                     <h2>画像</h2>
-                    <input type="file" name=post[review_image_url] accept="image/png, image/jpeg">
+                    <input type="file" name=review_image value="{{ $review->review_image_url }}">
                 </div>
                 
                 <input type="submit" value="保存"/>
