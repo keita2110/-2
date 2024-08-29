@@ -21,7 +21,7 @@
         <h1>店情報の編集</h1>
         
         <div class='edit'>
-            <form action="/shops/{{ $shop->id }}/show" method="POST">
+            <form action="/shops/{{ $shop->id }}/show" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="name">
@@ -42,7 +42,7 @@
                     
                     <div class="location">
                         <h3>住所</h3>
-                        <textarea name="shop[location]">{{ $shop->location }}</textarea>
+                        <textarea name="shop[location]">{{ $shop->location->address }}</textarea>
                     </div>
                     
                     <div class="reserve">
@@ -102,7 +102,7 @@
                 
                 <div class="image">
                     <h2>画像</h2>
-                    <input type="file" accept="image/png, image/jpeg">{{--削除もできるか確認--}}
+                    <input type="file" name="shop_image" value="{{ $shop->shop_image_url }}">
                 </div>
                 
                 <input type="submit" value="保存"/>

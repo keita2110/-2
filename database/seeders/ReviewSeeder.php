@@ -16,7 +16,7 @@ class ReviewSeeder extends Seeder
     {
         DB::table('reviews')->insert([
             'body'=>'おいしかった',
-            'review'=>'4',
+            'review'=>'4.3',
             'shop_id'=>'1',
             'user_id'=>'1',
             'created_at'=>new DateTime(),

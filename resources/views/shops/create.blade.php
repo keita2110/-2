@@ -19,7 +19,7 @@
         </x-slot>
         <h1　class="title">ラーメン屋の紹介</h1>
         
-        <form action="/shops" method="POST">
+        <form action="/shops" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="name">
                 <h2>ラーメン屋名</h2>
@@ -27,11 +27,6 @@
                 <p class="name__error" style="color:red">{{$errors->first('shop.name')}}</p>
             </div>
             
-            <!--<div class="review">-->
-            <!--    <h2>評価</h2>-->
-            <!--    <input type="number" name="shop[review]" min="1" max="5"/>-->
-            <!--</div>-->
-             
             <div class="shop_informations"> 
                 <h2>店情報</h2>
                 
@@ -42,7 +37,7 @@
                 
                 <div class="location">
                     <h3>住所</h3>
-                    <textarea name="shop[location]"></textarea>
+                    <textarea name="shop[location]" ></textarea>
                 </div>
                 
                 <div class="reserve">
@@ -102,7 +97,7 @@
             
             <div class="image">
                 <h2>画像</h2>
-                <input type="file" name=shop[shop_image_url] accept="image/png, image/jpeg">
+                <input type="file" name="shop_image">
             </div>
             
             <input type="submit" value="保存"/>

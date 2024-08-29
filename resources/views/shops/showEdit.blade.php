@@ -26,7 +26,7 @@
             </div>
             
             <div class="address">
-                <h3>住所：　</h3>{{ $shop->location }}
+                <h3>住所：　</h3>{{ $shop->location->address }}
             </div>
             
             <div class="time">
@@ -63,7 +63,8 @@
         <!--</div>-->
         
         <div class="image">
-            <img src="{{ $shop->shop_image_url }}" alt="Shop Image" />
+            <h2>＜　画像　＞</h2>
+            <img src="{{ $shop->shop_image_url }}" alt="画像の投稿はありません。" >
         </div>
         
         <a href='/shops/{{ $shop->id }}/edit'>編集する</a>

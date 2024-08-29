@@ -21,7 +21,7 @@
         ユーザー名：{{ Auth::user()->name }}
         </div>
         
-        <a href=''>近くのラーメン屋を探す</a>
+        <a href='/search'>近くのラーメン屋を探す</a>
         
         <a href='/shops/create'>店を紹介する</a>
         

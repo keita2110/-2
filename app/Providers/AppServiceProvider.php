@@ -9,10 +9,12 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    // public function register(): void
-    // {
-    //     //
-    // }
+    public function register(): void
+    {
+        $this->app->singleton(\App\Services\GeocodingService::class, function ($app) {
+            return new \App\Services\GeocodingService(); 
+        });
+    }
 
     /**
      * Bootstrap any application services.
