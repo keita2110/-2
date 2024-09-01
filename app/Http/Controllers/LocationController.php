@@ -8,8 +8,9 @@ use App\Models\Shop;
 
 class LocationController extends Controller
 {
-    public function search() {
-        $locations = Location::all();
+    public function search(Request $request) {
+        $locations = Location::with(['shops.shop_category'])->get(); // 全ての場所とそのショップ、ショップカテゴリを取得
+
         $api_key = config('app.api_key');
         
         return view('locations.search')->with([
@@ -19,31 +20,44 @@ class LocationController extends Controller
     }
     
     public function getNearRamen(Request $request) {
-        $latitude = $request->input('latitude'); // ユーザから送信された緯度
-        $longitude = $request->input('longitude'); // ユーザから送信された経度
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
         
-        // ハバード距離を使用して、指定の位置から近い順に並べる
-        $ramens = Location::with('shops') // shopsリレーションをロード
+        $ramens = Location::with(['shops' => function($query) use ($latitude, $longitude) {
+            $query->selectRaw('shops.*, 
+                (6371 * acos(cos(radians(?)) * cos(radians(locations.latitude)) * cos(radians(locations.longitude) - radians(?)) + sin(radians(?)) * sin(radians(locations.latitude)))) AS distance', 
+                [$latitude, $longitude, $latitude])
+                ->join('locations', 'shops.location_id', '=', 'locations.id')
+                ->orderBy('distance');
+        }, 'shops.shop_category'])
             ->selectRaw('locations.*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
-            ->having('distance', '<', 5) // 5km以内
-            ->orderBy('distance') // 距離の近い順
-            ->limit(4) // 最大4件
-            ->get(); // 結果の取得
+            ->having('distance', '<', 5)
+            ->orderBy('distance')
+            ->limit(4)
+            ->get();
         
         $result = $ramens->map(function($ramen) {
             return [
                 'latitude' => $ramen->latitude,
                 'longitude' => $ramen->longitude,
                 'distance' => $ramen->distance,
+                'address' => $ramen->address,
                 'shops' => $ramen->shops->map(function($shop) {
-                    return [ // Shop の名前を取得
+                    return [
+                        
                         'id' => $shop->id,
                         'name' => $shop->name,
+                        'open_time' => $shop->open_time,
+                        'close_time' => $shop->close_time,
+                        'min_price' => $shop->min_price,
+                        'max_price' => $shop->max_price,
+                        'review_avg' => $shop->review_avg, // 小数点第1位までフォーマット
+                        'category_name' => $shop->shop_category ? $shop->shop_category->name : '未分類',
                     ];
                 }),
             ];
         });
-        // JSON形式で結果を返す
-        return response()->json($ramens); 
+        
+        return response()->json($result);
     }
 }

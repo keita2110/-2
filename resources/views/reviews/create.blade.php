@@ -35,7 +35,7 @@
                 
             </form>
             <div class="footer">
-                <a href="/">戻る</a>
+                <a href="/shops/{{ $shop->id }}">戻る</a>
     
     </x-app-layout>
     </body>

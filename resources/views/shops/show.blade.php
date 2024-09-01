@@ -69,7 +69,7 @@
         
         <div class="comment">
             <h2>＜　口コミ　＞</h2>
-            @foreach($shop->reviews as $review)
+            @foreach($shop->reviews->take(3) as $review)
                 <p>投稿者：{{ $review->user->name }}</p>
                 <p>{{ $review->body }}</p>
                 <p>いいねの数：{{ $review->likes->count() }}</p>
@@ -85,7 +85,7 @@
                 </form>
             @endforeach
         </div>
-        
+
         <a href="/reviews/create/{{$shop->id}}">評価と口コミを書く</a>
         
          <div class="footer">

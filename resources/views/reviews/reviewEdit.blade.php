@@ -39,6 +39,10 @@
             <button type="button" onclick="deleteReview({{ $review->id }})">口コミの削除</button>
         </form>
         
+        <div class="show">
+            <a href="{{ route('shops.show', ['shop' => $shop->id]) }}">店の詳細ページに戻る</a>
+        </div>
+            
         <div class="footer">
             <a href="/">トップページに戻る</a>
         </div>
