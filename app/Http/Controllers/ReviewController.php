@@ -16,8 +16,8 @@ class ReviewController extends Controller
         ]);
     } 
     
-    public function reviewEdit(Review $review, Shop $shop){
-        $review=Review::find($review->id);
+    public function reviewEdit(Review $review){
+        $shop = $review->shop;
         
         return view('reviews.reviewEdit',[
             'review' => $review,

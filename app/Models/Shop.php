@@ -10,12 +10,12 @@ class Shop extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
-    protected $fillable=[
+
+    protected $fillable = [
         'name',
         'reserve',
         'menu',
-        'review_avg',
+        'review_avg', // この属性は updateReviewAvg メソッドで更新します
         'open_time',
         'close_time',
         'phone',
@@ -26,32 +26,37 @@ class Shop extends Model
         'shop_category_id',
         'user_id',
     ];
-    
-    //作ってから確認
-    
-    public function updateReviewAvg(){
-        $avg = $this->reviews()->avg('review');
-        $avg = number_format($avg, 1);
-        $this->update(['review_avg'=> $avg]);
+
+    // レビュー平均を更新
+    public function updateReviewAvg()
+    {
+        $avg = $this->reviews()->avg('review'); // `review` カラム名を確認して置き換えてください
+        $avg = number_format($avg, 1); // 小数点1桁でフォーマット
+        $this->update(['review_avg' => $avg]);
     }
-    
-    public function location(){
+
+    public function location()
+    {
         return $this->belongsTo(Location::class);
     }
-    
-    public function shop_category(){
+
+    public function shop_category()
+    {
         return $this->belongsTo(ShopCategory::class);
     }
-    
-    public function user(){
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    
-    public function reviews(){
+
+    public function reviews()
+    {
         return $this->hasMany(Review::class);
     }
-    
-    public function ramen_tags(){
+
+    public function ramen_tags()
+    {
         return $this->belongsToMany(RamenTag::class);
     }
 }

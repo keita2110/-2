@@ -15,7 +15,7 @@ class ShopCategorySeeder extends Seeder
     public function run(): void
     {
         DB::table('shop_categories')->insert([
-            'name'=>'家系'
+            'name'=>'該当なし'
         ]);
         
         DB::table('shop_categories')->insert([
@@ -27,7 +27,7 @@ class ShopCategorySeeder extends Seeder
         ]);
         
         DB::table('shop_categories')->insert([
-            'name' => '該当なし'
+            'name' => '家系'
         ]);
     }
 }

@@ -26,9 +26,9 @@ class ShopSeeder extends Seeder
              'max_price'=>'1500',
              'created_at'=>new DateTime(),
              'updated_at'=>new DateTime(),
-             //'location'=>'ケイタ市',
+             'review_avg'=>'4',
              'location_id'=>'1',
-             'shop_category_id'=>'1',
+             'shop_category_id'=>'4',
              'user_id'=>'1',
              
         ]);
@@ -45,9 +45,9 @@ class ShopSeeder extends Seeder
              'max_price'=>'1500',
              'created_at'=>new DateTime(),
              'updated_at'=>new DateTime(),
-             //'location'=>'ハマサキケイタ市',
+             'review_avg'=>'3',
              'location_id'=>'2',
-             'shop_category_id'=>'1',
+             'shop_category_id'=>'4',
              'user_id'=>'1',
         ]);
     }

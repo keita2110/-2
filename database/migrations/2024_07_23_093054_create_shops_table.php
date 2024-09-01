@@ -21,11 +21,11 @@ return new class extends Migration
             $table->string('phone', 20)->nullable();
             $table->integer('min_price')->nullable();
             $table->integer('max_price')->nullable();
-            $table->integer('review_avg')->nullable();
+            $table->double('review_avg')->nullable();
             $table->string('shop_image_url')->nullable();
             //$table->string('location')->nullable();
            //外部キー
-            $table->foreignId('location_id')->constrained()->onDelete('cascade');
+            $table->foreignId('location_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('shop_category_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             

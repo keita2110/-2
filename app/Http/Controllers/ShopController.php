@@ -25,10 +25,18 @@ class ShopController extends Controller
         return view('shops.index');//->with(['shops' => $shop->get()]);
     }
     
-    public function show(Shop $shop){
-        $shop->load(['shop_category','ramen_tags','reviews.user','location']);
+    public function show(Shop $shop)
+    {
+        $shop->load(['shop_category', 'ramen_tags', 'reviews.user', 'location']);
+    
+        // 最初の3件のレビューを取得
+        $shop = Shop::with(['reviews' => function ($query) {
+            $query->take(3); // 最初の3件を取得
+        }, 'reviews.user', 'reviews.likes'])->findOrFail($shop->id);
+    
         // レビュー平均を更新
         $shop->updateReviewAvg();
+    
         return view('shops.show')->with(['shop' => $shop]);
     }
     
@@ -71,7 +79,9 @@ class ShopController extends Controller
         }
         
         if($location) {
-            $shop->location_id = $location->id;
+            $input['location_id'] = $location->id;
+        } else {
+            $input['location_id'] = null;
         }
         
         $currentImageUrl = $shop->shop_image_url;
@@ -131,7 +141,9 @@ class ShopController extends Controller
         }
         
         if($location) {
-            $shop->location_id = $location->id;
+            $input['location_id'] = $location->id;
+        } else {
+            $input['location_id'] = null;
         }
         
         if($request->file('shop_image')){ //画像ファイルが送られた時だけ処理実行
@@ -143,7 +155,6 @@ class ShopController extends Controller
         $input['user_id'] = $userId;
         
         $shop->fill($input)->save();
-        
         $shop->ramen_tags()->sync($input_tags);
         
         //return view('shops.showEdit')->with(['shop' => $shop]);
