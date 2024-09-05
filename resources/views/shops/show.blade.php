@@ -6,6 +6,13 @@
         <title>店詳細ページ</title>
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        
+        <style>
+            #shop-map {
+                height: 500px;
+                width: 100%;
+            }
+        </style>
     </head>
     <body>
     <x-app-layout>
@@ -58,7 +65,8 @@
             {{ $shop->menu }}
         </div>
         
-        <div class="map">{{--編集--}}
+        <h2>＜　地図　＞</h2>
+        <div id="shop-map">{{--編集--}}
             
         </div>
         
@@ -69,10 +77,10 @@
         
         <div class="comment">
             <h2>＜　口コミ　＞</h2>
-            @foreach($shop->reviews->take(3) as $review)
+            @foreach($shop->reviews as $review)
                 <p>投稿者：{{ $review->user->name }}</p>
                 <p>{{ $review->body }}</p>
-                <p>いいねの数：{{ $review->likes->count() }}</p>
+                <p>いいねの数：{{ $review->likes_count }}</p>
                 <form action="/reviews/{{ $review->id }}/like" method="POST">
                     @csrf
                     <button type="submit">
@@ -84,6 +92,7 @@
                     </button>
                 </form>
             @endforeach
+            <a href="/shops/{{$shop->id}}/reviews">もっと口コミを見る</a>
         </div>
 
         <a href="/reviews/create/{{$shop->id}}">評価と口コミを書く</a>
@@ -91,6 +100,55 @@
          <div class="footer">
             <a href="/search">戻る</a>
         </div>
+        
+        
+        <script>
+            var map;
+            var shopMarker;
+            var userMarker;
+            
+            function initMap() {
+                var shopLocation = { lat: {{ $latitude }}, lng: {{ $longitude }} };
+                var mapOptions = {
+                    center: shopLocation,
+                    zoom: 15,
+                };
+                
+                map = new google.maps.Map(document.getElementById('shop-map'), mapOptions);
+                
+                shopMarker = new google.maps.Marker({
+                    position: shopLocation,
+                    map: map,
+                    title: '{{ $shop->name }}',
+                });
+                
+                if(navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        
+                        userMarker = new google.maps.Marker({
+                            position: userLocation,
+                            map: map,
+                            title: '現在地',
+                            icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
+                        });
+                        
+                        map.setCenter(userLocation);
+                        map.setZoom(14);
+                        
+                    }, function() {
+                        alert('位置情報の取得に失敗しました。');
+                    });
+                } else {
+                    alert('このブラウザは位置情報をサポートしていません。')
+                }
+            }
+        </script>
+        
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ $api_key }}&callback=initMap" async defer></script>
         
     </x-app-layout>
     </body>
