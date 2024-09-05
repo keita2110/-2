@@ -14,11 +14,6 @@
         </x-slot>
         <h1 class="name">{{ $shop->name }}</h1>
         
-        <!--<div class="review">-->
-        <!--    <h2>＜　評価　＞</h2>-->
-        <!--    -->
-        <!--</div>-->
-        
         <div class="shop_information">
         <h2>＜　店情報　＞</h2>
             <div class="reserve">

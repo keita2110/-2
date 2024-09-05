@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Search</title>
+    <title>検索結果</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -40,9 +40,10 @@
 <body>
 <x-app-layout>
     <x-slot name="header">
-        Search
+        検索結果
     </x-slot>
-    <h1>＜ 地図 ＞</h1>
+
+    <h1>＜ 条件検索結果 ＞</h1>
 
     <!-- マップ表示部分 -->
     <div id="map"></div>
@@ -55,6 +56,9 @@
         var map;
         var markers = [];
         var highlightedMarker = null;
+        var userLocation = null;
+        var selectedCategory = @json($categoryId); // サーバーから渡された変数
+        var selectedRamenTags = @json($ramenTags); // サーバーから渡された変数
 
         window.initMap = function() {
             var defaultLocation = { lat: 35.681236, lng: 139.767125 };
@@ -67,12 +71,12 @@
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
             // 全てのマーカーを追加
-            @foreach ($locations as $location)
-                @if(!empty($location->latitude) && !empty($location->longitude))
+            @foreach ($shops as $shop)
+                @if(!empty($shop->location->latitude) && !empty($shop->location->longitude))
                     var marker = new google.maps.Marker({
-                        position: { lat: {{ $location->latitude }}, lng: {{ $location->longitude }} },
+                        position: { lat: {{ $shop->location->latitude }}, lng: {{ $shop->location->longitude }} },
                         map: map,
-                        title: '{{ $location->address }}',
+                        title: '{{ $shop->name }}',
                     });
                     markers.push(marker);
                 @endif
@@ -80,7 +84,7 @@
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    var userLocation = {
+                    userLocation = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,
                     };
@@ -95,7 +99,7 @@
                         icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
                     });
 
-                    fetch('/distance', {
+                    fetch('/map-search', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -104,44 +108,39 @@
                         body: JSON.stringify({
                             latitude: userLocation.lat,
                             longitude: userLocation.lng,
+                            category: selectedCategory,
+                            ramen_tags: selectedRamenTags
                         })
                     })
                     .then(response => response.json())
                     .then(data => {
                         console.log(data); // デバッグ用
-
-                        // ラーメン店リストを生成
                         var ramenList = document.getElementById('ramen-list');
                         ramenList.innerHTML = ''; // 既存のリストをクリア
                         markers = []; // 既存のマーカーをクリア
-                        data.forEach(ramen => {
-                            ramen.shops.forEach(shop => {
-                                // 評価が0の場合に「評価無し」と表示
-                                var reviewText = shop.review_avg > 0 ? shop.review_avg : '評価無し';
-
-                                var ramenItem = document.createElement('div');
-                                ramenItem.classList.add('ramen-item');
-                                ramenItem.innerHTML = `
-                                    <h3>${shop.name || ''}</h3>
-                                    <p>評価: ${reviewText}</p>
-                                    <p>ジャンル: ${shop.category_name || ''}</p> 
-                                    <p>営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
-                                    <p>料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
-                                    <p>住所: ${ramen.address || ''}</p> <!-- 住所情報 -->
-                                    <p>距離: ${ramen.distance.toFixed(2)} km</p> <!-- 距離情報（小数点以下2桁） -->
-                                    <a href="/shops/${shop.id}">詳細ページへ</a><br>
-                                    <button onclick="highlightLocation(${ramen.latitude}, ${ramen.longitude})">位置を見る</button>
-                                `;
-                                ramenList.appendChild(ramenItem);
-
-                                // マーカーを追加
-                                var ramenMarker = new google.maps.Marker({
-                                    position: { lat: ramen.latitude, lng: ramen.longitude },
-                                    map: map,
-                                    title: shop.name || 'ラーメン店'
-                                });
-                                markers.push(ramenMarker);
+                    
+                        data.forEach(shop => {
+                            var ramenItem = document.createElement('div');
+                            ramenItem.classList.add('ramen-item');
+                            ramenItem.innerHTML = `
+                                <h3>${shop.name || ''}</h3>
+                                <p>評価: ${shop.review_avg || '評価無し'}</p>
+                                <p>ジャンル: ${shop.category_name || ''}</p>
+                                <p>営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
+                                <p>料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
+                                <p>住所: ${shop.address || ''}</p>
+                                <p>距離: ${shop.distance.toFixed(2)} km</p>
+                                <a href="/shops/${shop.id}">詳細ページへ</a><br>
+                                <button onclick="highlightLocation(${shop.latitude}, ${shop.longitude})">位置を見る</button>
+                            `;
+                            ramenList.appendChild(ramenItem);
+                    
+                            var ramenMarker = new google.maps.Marker({
+                                position: { lat: shop.latitude, lng: shop.longitude },
+                                map: map,
+                                title: shop.name || 'ラーメン店'
                             });
+                            markers.push(ramenMarker);
                         });
                     })
                     .catch(error => {
@@ -170,7 +169,7 @@
                 icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // 強調表示用のアイコン
             });
 
-            map.setCenter(userLocation);
+            map.setCenter({ lat: lat, lng: lng });
             map.setZoom(15);
         }
     </script>

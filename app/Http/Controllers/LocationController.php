@@ -44,7 +44,6 @@ class LocationController extends Controller
                 'address' => $ramen->address,
                 'shops' => $ramen->shops->map(function($shop) {
                     return [
-                        
                         'id' => $shop->id,
                         'name' => $shop->name,
                         'open_time' => $shop->open_time,

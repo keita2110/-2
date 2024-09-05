@@ -13,7 +13,7 @@
             <form action="/reviews" method="POST" enctype="multipart/form-data">{{--要確認--}}
                 @csrf
                 
-                <input type="hidden" name="post[shop_id]" value="{{ $shop->id}}" />
+                <input type="hidden" name="post[shop_id]" value="{{ $shop->id }}" />
                 
                 <div class="review">
                     <h2>評価</h2>

@@ -32,6 +32,17 @@ class ReviewController extends Controller
         ]);
     }
     
+    public function reviewShow(Shop $shop) {
+        // 全ての口コミを「いいね」の数でソートして取得
+        $reviews = $shop->reviews()->withCount('likes') // 口コミに「いいね」の数をカウント
+                                  ->orderBy('likes_count', 'desc') // 「いいね」の数で降順にソート
+                                  ->get();
+        return view('reviews.reviewShow', [
+            'shop' => $shop,
+            'reviews' => $reviews
+        ]);
+    }
+    
     public function update2(ReviewRequest $request,Review $review){
         $input=$request['post'];
         
