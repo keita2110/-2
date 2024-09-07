@@ -56,7 +56,7 @@ class LocationController extends Controller
                 }),
             ];
         });
-        
+        dd($request);
         return response()->json($result);
     }
 }
