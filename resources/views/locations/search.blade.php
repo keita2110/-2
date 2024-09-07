@@ -95,7 +95,7 @@
                         icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
                     });
 
-                    fetch('https://ramensearch-6c7d98b2ffb6.herokuapp.com/distance', {
+                    fetch('/distance', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -106,43 +106,15 @@
                             longitude: userLocation.lng,
                         })
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data); // デバッグ用
-
-                        // ラーメン店リストを生成
-                        var ramenList = document.getElementById('ramen-list');
-                        ramenList.innerHTML = ''; // 既存のリストをクリア
-                        markers = []; // 既存のマーカーをクリア
-                        data.forEach(ramen => {
-                            ramen.shops.forEach(shop => {
-                                // 評価が0の場合に「評価無し」と表示
-                                var reviewText = shop.review_avg > 0 ? shop.review_avg : '評価無し';
-
-                                var ramenItem = document.createElement('div');
-                                ramenItem.classList.add('ramen-item');
-                                ramenItem.innerHTML = `
-                                    <h3>${shop.name || ''}</h3>
-                                    <p>評価: ${reviewText}</p>
-                                    <p>ジャンル: ${shop.category_name || ''}</p> 
-                                    <p>営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
-                                    <p>料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
-                                    <p>住所: ${ramen.address || ''}</p> <!-- 住所情報 -->
-                                    <p>距離: ${ramen.distance.toFixed(2)} km</p> <!-- 距離情報（小数点以下2桁） -->
-                                    <a href="/shops/${shop.id}">詳細ページへ</a><br>
-                                    <button onclick="highlightLocation(${ramen.latitude}, ${ramen.longitude})">位置を見る</button>
-                                `;
-                                ramenList.appendChild(ramenItem);
-
-                                // マーカーを追加
-                                var ramenMarker = new google.maps.Marker({
-                                    position: { lat: ramen.latitude, lng: ramen.longitude },
-                                    map: map,
-                                    title: shop.name || 'ラーメン店'
-                                });
-                                markers.push(ramenMarker);
-                            });
-                        });
+                    .then(response => response.text())  // JSONではなく、テキストとしてレスポンスを処理
+                    .then(text => {
+                        console.log('Response:', text); // レスポンス内容をログに出力
+                        try {
+                            const data = JSON.parse(text);
+                            console.log(data); // JSONに変換してデータをログに出力
+                        } catch (e) {
+                            console.error('Parsing Error:', e);
+                        }
                     })
                     .catch(error => {
                         console.error('Error:', error);
