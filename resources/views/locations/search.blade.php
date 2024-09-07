@@ -95,7 +95,7 @@
                         icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png',
                     });
 
-                    fetch('/distance', {
+                    fetch('https://ramensearch-6c7d98b2ffb6.herokuapp.com/distance', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
