@@ -31,7 +31,7 @@ class LocationController extends Controller
             }, 'subquery')
             ->where('subquery.distance', '<', 100)
             ->orderBy('subquery.distance')
-            ->limit(4)
+            ->limit(5)
             ->with(['shops' => function($query) {
                 $query->select('id', 'location_id', 'name', 'open_time', 'close_time', 'min_price', 'max_price', 'review_avg')
                       ->with(['shop_category:id,name']);
