@@ -83,7 +83,7 @@
                                     <p class="text-gray-700">営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
                                     <p class="text-gray-700">料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
                                     <p class="text-gray-700">住所: ${ramen.address || ''}</p>
-                                    <p class="text-gray-700">距離: ${parseFloat(ramen.distance).toFixed(2)} km</p> <!-- ここで距離を表示 -->
+                                    <p class="text-gray-700">距離: ${parseFloat(ramen.distance).toFixed(2)} km</p> 
                                     <a href="/shops/${shop.id}" class="text-blue-500 hover:underline">詳細ページへ</a><br>
                                     <button onclick="highlightLocation(${ramen.latitude}, ${ramen.longitude})" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">位置を見る</button>
                                 `;
