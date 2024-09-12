@@ -2,11 +2,8 @@
     <x-slot name="header">
         検索結果
     </x-slot>
-
-    <h1>＜ 条件検索結果 ＞</h1>
-
-    <!-- マップ表示部分 -->
-    <div id="map"></div>
+    <h2 class="text-xl font-semibold text-center py-4">＜ 条件検索結果 ＞</h2>
+    <div id="map" class="h-[500px] w-full mb-4 border border-gray-300 rounded-lg shadow-md"></div>
 
     <div id="ramen-list">
         <!-- ラーメン店のリストはここに動的に追加されます -->
