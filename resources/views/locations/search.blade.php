@@ -1,60 +1,19 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>Search</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-    <style>
-        #map {
-            height: 500px;
-            width: 100%;
-        }
-        #ramen-list {
-            margin-top: 20px;
-            font-family: Arial, sans-serif;
-        }
-        .ramen-item {
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .ramen-item h3 {
-            margin: 0 0 10px 0;
-        }
-        .ramen-item p {
-            margin: 5px 0;
-        }
-        .highlight-marker {
-            color: red; /* 強調表示用の色 */
-        }
-    </style>
-</head>
-<body>
 <x-app-layout>
     <x-slot name="header">
-        Search
+        <h1 class="text-2xl font-bold">検索結果</h1>
     </x-slot>
-    <h1>＜ 地図 ＞</h1>
 
-    <!-- マップ表示部分 -->
-    <div id="map"></div>
+    
+    <h2 class="text-xl font-semibold text-center py-4">＜ 地図 ＞</h2>
+    <div id="map" class="h-[500px] w-full mb-4 border border-gray-300 rounded-lg shadow-md"></div>
 
-    <div id="ramen-list">
-        <!-- ラーメン店のリストはここに動的に追加されます -->
-    </div>
+    <div id="ramen-list" class="space-y-4 p-4"></div>
 
     <script>
         var map;
         var markers = [];
         var highlightedMarker = null;
+        var userLocation = null;
 
         window.initMap = function() {
             var defaultLocation = { lat: 35.681236, lng: 139.767125 };
@@ -66,7 +25,6 @@
 
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-            // 全てのマーカーを追加
             @foreach ($locations as $location)
                 @if(!empty($location->latitude) && !empty($location->longitude))
                     var marker = new google.maps.Marker({
@@ -80,7 +38,7 @@
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    var userLocation = {
+                    userLocation = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,
                     };
@@ -108,33 +66,30 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data); // デバッグ用
+                        console.log(data); 
 
-                        // ラーメン店リストを生成
                         var ramenList = document.getElementById('ramen-list');
-                        ramenList.innerHTML = ''; // 既存のリストをクリア
-                        markers = []; // 既存のマーカーをクリア
+                        ramenList.innerHTML = ''; 
+                        markers = []; 
                         data.forEach(ramen => {
                             ramen.shops.forEach(shop => {
-                                // 評価が0の場合に「評価無し」と表示
                                 var reviewText = shop.review_avg > 0 ? shop.review_avg : '評価無し';
 
                                 var ramenItem = document.createElement('div');
-                                ramenItem.classList.add('ramen-item');
+                                ramenItem.classList.add('bg-white', 'border', 'border-gray-300', 'p-4', 'rounded-lg', 'shadow-md');
                                 ramenItem.innerHTML = `
-                                    <h3>${shop.name || ''}</h3>
-                                    <p>評価: ${reviewText}</p>
-                                    <p>ジャンル: ${shop.category_name || ''}</p> 
-                                    <p>営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
-                                    <p>料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
-                                    <p>住所: ${ramen.address || ''}</p> <!-- 住所情報 -->
-                                    <p>距離: ${ramen.distance.toFixed(2)} km</p> <!-- 距離情報（小数点以下2桁） -->
-                                    <a href="/shops/${shop.id}">詳細ページへ</a><br>
-                                    <button onclick="highlightLocation(${ramen.latitude}, ${ramen.longitude})">位置を見る</button>
+                                    <h3 class="text-lg font-semibold mb-2">${shop.name || ''}</h3>
+                                    <p class="text-gray-700">評価: ${reviewText}</p>
+                                    <p class="text-gray-700">ジャンル: ${shop.category_name || ''}</p>
+                                    <p class="text-gray-700">営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
+                                    <p class="text-gray-700">料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
+                                    <p class="text-gray-700">住所: ${ramen.address || ''}</p>
+                                    <p class="text-gray-700">距離: ${ramen.distance.toFixed(2)} km</p>
+                                    <a href="/shops/${shop.id}" class="text-blue-500 hover:underline">詳細ページへ</a><br>
+                                    <button onclick="highlightLocation(${ramen.latitude}, ${ramen.longitude})" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">位置を見る</button>
                                 `;
                                 ramenList.appendChild(ramenItem);
 
-                                // マーカーを追加
                                 var ramenMarker = new google.maps.Marker({
                                     position: { lat: ramen.latitude, lng: ramen.longitude },
                                     map: map,
@@ -156,26 +111,22 @@
         };
 
         function highlightLocation(lat, lng) {
-            // すべてのマーカーの色を元に戻す
             markers.forEach(marker => marker.setIcon(null));
 
-            // 強調表示用マーカーを追加
             if (highlightedMarker) {
-                highlightedMarker.setMap(null); // 以前の強調表示マーカーを削除
+                highlightedMarker.setMap(null);
             }
             highlightedMarker = new google.maps.Marker({
                 position: { lat: lat, lng: lng },
                 map: map,
                 title: '強調表示地点',
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', // 強調表示用のアイコン
+                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png', 
             });
 
-            map.setCenter(userLocation);
+            map.setCenter({ lat: lat, lng: lng });
             map.setZoom(15);
         }
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key={{ $api_key }}&callback=initMap" async defer></script>
 </x-app-layout>
-</body>
-</html>

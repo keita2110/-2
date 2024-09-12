@@ -23,17 +23,19 @@ class LocationController extends Controller
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
         
-        $ramens = Location::with(['shops' => function($query) use ($latitude, $longitude) {
-            $query->selectRaw('shops.*,
-            (6371 * acos(cos(radians(?)) * cos(radians(locations.latitude)) * cos(radians(locations.longitude) - radians(?)) + sin(radians(?)) * sin(radians(locations.latitude)))) AS distance',
-            [$latitude, $longitude, $latitude])
-            ->join('locations', 'shops.location_id', '=', 'locations.id')
-            ->orderBy('distance');
-        }, 'shops.shop_category'])
-            ->selectRaw('locations.*, (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
-            ->having('distance', '<', 5)
-            ->orderBy('distance')
+        $ramens = Location::select('subquery.*')  // サブクエリからカラムを取得
+            ->fromSub(function ($query) use ($latitude, $longitude) {
+              $query->select('locations.*')
+                ->selectRaw('(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
+                ->from('locations');
+            }, 'subquery')  // サブクエリにエイリアスを付ける
+            ->where('subquery.distance', '<', 100)
+            ->orderBy('subquery.distance')
             ->limit(4)
+            ->with(['shops' => function($query) {
+            $query->select('id', 'location_id', 'name', 'open_time', 'close_time', 'min_price', 'max_price', 'review_avg')
+              ->with(['shop_category:id,name']);
+            }])
             ->get();
         
         $result = $ramens->map(function($ramen) {

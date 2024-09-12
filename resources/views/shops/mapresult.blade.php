@@ -1,43 +1,3 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>検索結果</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
-    <style>
-        #map {
-            height: 500px;
-            width: 100%;
-        }
-        #ramen-list {
-            margin-top: 20px;
-            font-family: Arial, sans-serif;
-        }
-        .ramen-item {
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .ramen-item h3 {
-            margin: 0 0 10px 0;
-        }
-        .ramen-item p {
-            margin: 5px 0;
-        }
-        .highlight-marker {
-            color: red; /* 強調表示用の色 */
-        }
-    </style>
-</head>
-<body>
 <x-app-layout>
     <x-slot name="header">
         検索結果
@@ -176,5 +136,3 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key={{ $api_key }}&callback=initMap" async defer></script>
 </x-app-layout>
-</body>
-</html>
