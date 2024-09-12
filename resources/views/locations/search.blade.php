@@ -66,30 +66,29 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('取得したデータ',data); 
-
                         var ramenList = document.getElementById('ramen-list');
                         ramenList.innerHTML = ''; 
                         markers = []; 
+                    
                         data.forEach(ramen => {
                             ramen.shops.forEach(shop => {
                                 var reviewText = shop.review_avg > 0 ? shop.review_avg : '評価無し';
-
+                    
                                 var ramenItem = document.createElement('div');
                                 ramenItem.classList.add('bg-white', 'border', 'border-gray-300', 'p-4', 'rounded-lg', 'shadow-md');
                                 ramenItem.innerHTML = `
-                                    <h3 class="text-lg font-semibold mb-2">${shop.name || '未設定'}</h3>
+                                    <h3 class="text-lg font-semibold mb-2">${shop.name || ''}</h3>
                                     <p class="text-gray-700">評価: ${reviewText}</p>
-                                    <p class="text-gray-700">ジャンル: ${shop.category_name || '未設定'}</p>
-                                    <p class="text-gray-700">営業時間: ${shop.open_time || '未設定'} - ${shop.close_time || '未設定'}</p>
-                                    <p class="text-gray-700">料金: ¥${shop.min_price || '未設定'} - ¥${shop.max_price || '未設定'}</p>
-                                    <p class="text-gray-700">住所: ${ramen.address || '未設定'}</p>
-                                    <p class="text-gray-700">距離: ${typeof ramen.distance === 'number' ? ramen.distance.toFixed(2) : '不明'} km</p>
+                                    <p class="text-gray-700">ジャンル: ${shop.category_name || ''}</p>
+                                    <p class="text-gray-700">営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
+                                    <p class="text-gray-700">料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
+                                    <p class="text-gray-700">住所: ${ramen.address || ''}</p>
+                                    <p class="text-gray-700">距離: ${parseFloat(ramen.distance).toFixed(2)} km</p> <!-- ここで距離を表示 -->
                                     <a href="/shops/${shop.id}" class="text-blue-500 hover:underline">詳細ページへ</a><br>
                                     <button onclick="highlightLocation(${ramen.latitude}, ${ramen.longitude})" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">位置を見る</button>
                                 `;
                                 ramenList.appendChild(ramenItem);
-
+                    
                                 var ramenMarker = new google.maps.Marker({
                                     position: { lat: ramen.latitude, lng: ramen.longitude },
                                     map: map,
@@ -102,6 +101,7 @@
                     .catch(error => {
                         console.error('エラー:', error);
                     });
+
                 }, function() {
                     alert('位置情報の取得に失敗しました。');
                 });
