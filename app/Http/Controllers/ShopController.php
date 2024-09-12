@@ -109,28 +109,29 @@ class ShopController extends Controller
         $ramenTags = $request->input('ramen_tags', []);
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-    
+        
         $query = Shop::query();
-    
+        
         if ($categoryId) {
             $query->where('shop_category_id', $categoryId);
         }
-    
+        
         if (!empty($ramenTags)) {
             $query->whereHas('ramen_tags', function($q) use ($ramenTags) {
                 $q->whereIn('ramen_tags.id', $ramenTags);
             });
         }
-    
+        
         if ($latitude && $longitude) {
-            $query->selectRaw('shops.*, 
-                (6371 * acos(cos(radians(?)) * cos(radians(locations.latitude)) * cos(radians(locations.longitude) - radians(?)) + sin(radians(?)) * sin(radians(locations.latitude)))) AS distance', 
-                [$latitude, $longitude, $latitude])
+            $query->select('shops.*')
+                ->selectRaw('(6371 * acos(cos(radians(?)) * cos(radians(locations.latitude)) * cos(radians(locations.longitude) - radians(?)) + sin(radians(?)) * sin(radians(locations.latitude)))) AS distance', 
+                    [$latitude, $longitude, $latitude])
                 ->join('locations', 'shops.location_id', '=', 'locations.id')
-                ->orderBy('distance')
-                ->having('distance', '<', 5); // 5km以内の店舗を取得
+                ->whereRaw('(6371 * acos(cos(radians(?)) * cos(radians(locations.latitude)) * cos(radians(locations.longitude) - radians(?)) + sin(radians(?)) * sin(radians(locations.latitude)))) < 5', 
+                    [$latitude, $longitude, $latitude])
+                ->orderBy('distance');
         }
-    
+        
         $shops = $query->with('location', 'shop_category')->get();
         
         // 取得したショップのデータを整形
