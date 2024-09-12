@@ -3,7 +3,6 @@
         <h1 class="text-2xl font-bold">検索結果</h1>
     </x-slot>
 
-    
     <h2 class="text-xl font-semibold text-center py-4">＜ 地図 ＞</h2>
     <div id="map" class="h-[500px] w-full mb-4 border border-gray-300 rounded-lg shadow-md"></div>
 
@@ -25,6 +24,7 @@
 
             map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
+            // 位置情報のマーカーを追加
             @foreach ($locations as $location)
                 @if(!empty($location->latitude) && !empty($location->longitude))
                     var marker = new google.maps.Marker({
@@ -78,13 +78,13 @@
                                 var ramenItem = document.createElement('div');
                                 ramenItem.classList.add('bg-white', 'border', 'border-gray-300', 'p-4', 'rounded-lg', 'shadow-md');
                                 ramenItem.innerHTML = `
-                                    <h3 class="text-lg font-semibold mb-2">${shop.name || ''}</h3>
+                                    <h3 class="text-lg font-semibold mb-2">${shop.name || '未設定'}</h3>
                                     <p class="text-gray-700">評価: ${reviewText}</p>
-                                    <p class="text-gray-700">ジャンル: ${shop.category_name || ''}</p>
-                                    <p class="text-gray-700">営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
-                                    <p class="text-gray-700">料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
-                                    <p class="text-gray-700">住所: ${ramen.address || ''}</p>
-                                    <p class="text-gray-700">距離: ${ramen.distance.toFixed(2)} km</p>
+                                    <p class="text-gray-700">ジャンル: ${shop.category_name || '未設定'}</p>
+                                    <p class="text-gray-700">営業時間: ${shop.open_time || '未設定'} - ${shop.close_time || '未設定'}</p>
+                                    <p class="text-gray-700">料金: ¥${shop.min_price || '未設定'} - ¥${shop.max_price || '未設定'}</p>
+                                    <p class="text-gray-700">住所: ${ramen.address || '未設定'}</p>
+                                    <p class="text-gray-700">距離: ${typeof ramen.distance === 'number' ? ramen.distance.toFixed(2) : '不明'} km</p>
                                     <a href="/shops/${shop.id}" class="text-blue-500 hover:underline">詳細ページへ</a><br>
                                     <button onclick="highlightLocation(${ramen.latitude}, ${ramen.longitude})" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">位置を見る</button>
                                 `;
@@ -100,7 +100,7 @@
                         });
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        console.error('エラー:', error);
                     });
                 }, function() {
                     alert('位置情報の取得に失敗しました。');
