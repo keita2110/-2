@@ -66,7 +66,7 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data); 
+                        console.log('取得したデータ',data); 
 
                         var ramenList = document.getElementById('ramen-list');
                         ramenList.innerHTML = ''; 

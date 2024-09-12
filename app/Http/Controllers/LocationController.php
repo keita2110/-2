@@ -22,27 +22,27 @@ class LocationController extends Controller
     public function getNearRamen(Request $request) {
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-        
-        $ramens = Location::select('subquery.*')  // サブクエリからカラムを取得
+    
+        $ramens = Location::select('subquery.*')
             ->fromSub(function ($query) use ($latitude, $longitude) {
-              $query->select('locations.*')
-                ->selectRaw('(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
-                ->from('locations');
-            }, 'subquery')  // サブクエリにエイリアスを付ける
+                $query->select('locations.*')
+                    ->selectRaw('(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
+                    ->from('locations');
+            }, 'subquery')
             ->where('subquery.distance', '<', 100)
             ->orderBy('subquery.distance')
             ->limit(4)
             ->with(['shops' => function($query) {
-            $query->select('id', 'location_id', 'name', 'open_time', 'close_time', 'min_price', 'max_price', 'review_avg')
-              ->with(['shop_category:id,name']);
+                $query->select('id', 'location_id', 'name', 'open_time', 'close_time', 'min_price', 'max_price', 'review_avg')
+                      ->with(['shop_category:id,name']);
             }])
             ->get();
-        
+    
         $result = $ramens->map(function($ramen) {
             return [
                 'latitude' => $ramen->latitude,
                 'longitude' => $ramen->longitude,
-                'distance' => $ramen->distance,
+                'distance' => $ramen->distance, // distanceを含める
                 'address' => $ramen->address,
                 'shops' => $ramen->shops->map(function($shop) {
                     return [
@@ -52,13 +52,13 @@ class LocationController extends Controller
                         'close_time' => $shop->close_time,
                         'min_price' => $shop->min_price,
                         'max_price' => $shop->max_price,
-                        'review_avg' => $shop->review_avg, // 小数点第1位までフォーマット
+                        'review_avg' => $shop->review_avg,
                         'category_name' => $shop->shop_category ? $shop->shop_category->name : '未分類',
                     ];
                 }),
             ];
         });
-        
+    
         return response()->json($result);
     }
 }
