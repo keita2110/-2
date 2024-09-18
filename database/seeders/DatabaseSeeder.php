@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ShopCategorySeeder::class,
             ShopSeeder::class,
             ReviewSeeder::class,
+            RamenTagShopSeeder::class,
         ]);
     }
 }

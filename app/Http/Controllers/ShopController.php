@@ -147,6 +147,7 @@ class ShopController extends Controller
                 'category_name' => $shop->shop_category ? $shop->shop_category->name : '未分類',
                 'latitude' => $shop->location->latitude,
                 'longitude' => $shop->location->longitude,
+                'address' => $shop->location->address,
                 'distance' => $shop->distance
             ];
         });

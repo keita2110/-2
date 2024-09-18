@@ -1,8 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h1 class="text-2xl font-bold">検索結果</h1>
-    </x-slot>
-
     <h2 class="text-xl font-semibold text-center py-4">＜ 地図 ＞</h2>
     <div id="map" class="h-[500px] w-full mb-4 border border-gray-300 rounded-lg shadow-md"></div>
 
@@ -66,6 +62,7 @@
                     })
                     .then(response => response.json())
                     .then(data => {
+                        console.log(data); // デバッグ用
                         var ramenList = document.getElementById('ramen-list');
                         ramenList.innerHTML = ''; 
                         markers = []; 

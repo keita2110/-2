@@ -1,8 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h1 class="text-2xl font-bold">詳細ページ</h1>
-    </x-slot>
-
     <h1 class="text-6xl font-bold m-4">{{ $shop->name }}</h1>
 
     <div class="flex flex-wrap gap-4 m-4">
@@ -45,47 +41,67 @@
             </div>
         </div>
         <div class="bg-white border border-gray-300 p-4 rounded-lg shadow-md m-4">
-            <h2 class="text-2xl font-semibold mb-2">＜ 地図 ＞</h2>
-            <div id="shop-map" class="h-[500px] w-[1000px] border border-gray-300 rounded-lg shadow-md"></div>
+            <h2 class="text-2xl font-semibold mb-2">＜ 画像 ＞</h2>
+            <img src="{{ $shop->shop_image_url }}" alt="店の画像" style="width:900px; heigth:900px;" class="rounded-lg">
         </div>
     </div>
-
+    
     <div class="bg-white border border-gray-300 p-4 rounded-lg shadow-md m-4">
-        <h2 class="text-2xl font-semibold mb-2">＜ 画像 ＞</h2>
-        <img src="{{ $shop->shop_image_url }}" alt="店の画像" style="width:700px; heigth:700px;" class="rounded-lg">
+            <h2 class="text-2xl font-semibold m-4">＜ 地図 ＞</h2>
+            <div id="shop-map" class="h-[500px] w-full border border-gray-300 rounded-lg shadow-md"></div>
     </div>
 
     <div class="bg-white border border-gray-300 p-4 rounded-lg shadow-md m-4">
         <h2 class="text-2xl font-semibold mb-2">＜ 口コミ ＞</h2>
-        @foreach($shop->reviews as $review)
-            <div class="flex flex-col md:flex-row items-start gap-4 mb-4">
-                <div class="flex-1">
-                    <p class="font-semibold">投稿者：{{ $review->user->name }}</p>
-                    <p>{{ $review->body }}</p>
-                    <p class="text-gray-600">いいねの数：{{ $review->likes_count }}</p>
-                    <form action="/reviews/{{ $review->id }}/like" method="POST" class="mt-2">
-                        @csrf
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                            @if($review->likeBy(Auth::user()))
-                                いいねを消す
-                            @else
-                                いいね
-                            @endif
-                        </button>
-                    </form>
+        @if($shop->reviews->isNotEmpty())
+            @foreach($shop->reviews as $review)
+                <div class="flex flex-col md:flex-row items-start gap-4 mb-4">
+                    <div class="flex-1">
+                        <p class="font-semibold">投稿者：{{ $review->user->name }}</p>
+                        <div class="ml-4">
+                            <p>{{ $review->body }}</p>
+                        </div>
+                        <div class="flex flex-wrap px-4">
+                            <p class="text-gray-600 m-2">👍：{{ $review->likes_count }}</p>
+                            <form action="/reviews/{{ $review->id }}/like" method="POST" class="mt-2">
+                                @csrf
+                                <button type="submit" class="bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    @if($review->likeBy(Auth::user()))
+                                        👍を消す
+                                    @else
+                                        👍
+                                    @endif
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    @if($review->review_image_url)
+                        <img src="{{ $review->review_image_url }}" alt="口コミの画像" class="review-image">
+                    @endif
                 </div>
-                @if($review->review_image_url)
-                    <img src="{{ $review->review_image_url }}" alt="口コミの画像" style="" class="object-cover rounded-lg">
-                @endif
-            </div>
-        @endforeach
-        <a href="/shops/{{$shop->id}}/reviews" class="text-blue-500 hover:underline">もっと口コミを見る</a>
+            @endforeach
+            <a href="/shops/{{$shop->id}}/reviews"
+               class="inline-block px-6 py-3 text-white bg-blue-500 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300 ease-in-out">
+               もっと口コミを見る
+            </a>
+
+        @else
+            <p>投稿されている口コミはないです</p>
+        @endif
     </div>
-
-    <a href="/reviews/create/{{$shop->id}}" class="block text-blue-500 hover:underline mb-4">評価と口コミを書く</a>
-
-    <div class="text-center mb-4">
-        <a href="/search" class="text-blue-500 hover:underline">戻る</a>
+    
+    <div class="flex flex-wrap p-4 m-4">
+        <a href="/reviews/create/{{$shop->id}}"
+           class="inline-block px-6 py-3 text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-300 ease-in-out mb-4">
+           評価と口コミを書く
+        </a>
+        
+        <div class="mb-4">
+            <button onclick="window.history.back()"
+                    class="inline-block px-6 py-3 ml-3 text-white bg-gray-500 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300 transition duration-300 ease-in-out">
+                戻る
+            </button>
+        </div>
     </div>
 
     <script>

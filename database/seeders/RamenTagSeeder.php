@@ -33,5 +33,17 @@ class RamenTagSeeder extends Seeder
         DB::table('ramen_tags')->insert([
             'name'=>'油そば',
         ]);
+        
+        DB::table('ramen_tags')->insert([
+            'name'=>'タンメン',
+        ]);
+        
+        DB::table('ramen_tags')->insert([
+            'name'=>'担々麺',
+        ]);
+        
+        DB::table('ramen_tags')->insert([
+            'name'=>'うどん・そば',
+        ]);
     }
 }

@@ -25,5 +25,23 @@ class LocationSeeder extends Seeder
             'latitude'=>'35.566853807465',
             'longitude'=>'139.601370225',
         ]);
+        
+        DB::table('locations')->insert([
+            'address'=>'〒216-0002 神奈川県川崎市宮前区東有馬５丁目５−１',
+            'latitude'=>'35.57104474453756',
+            'longitude'=>'139.59272448768192',
+        ]);
+        
+        DB::table('locations')->insert([
+            'address'=>'〒216-0003 神奈川県川崎市宮前区有馬２丁目８−１',
+            'latitude'=>'35.57984593079752',
+            'longitude'=>'139.58466978850686',
+        ]);
+        
+        DB::table('locations')->insert([
+            'address'=>'〒216-0002 神奈川県川崎市宮前区東有馬３丁目８−２７ レスターテ鷺沼',
+            'latitude'=>'35.57171958794088',
+            'longitude'=>'139.58819207796392',
+        ]);
     }
 }

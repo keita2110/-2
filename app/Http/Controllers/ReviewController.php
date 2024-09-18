@@ -62,7 +62,7 @@ class ReviewController extends Controller
     
     public function delete2(Review $review){
         $review->delete();
-        return redirect("/shops/{$review->shop_id}/show");
+        return redirect("/shops/{$review->shop_id}/");
     }
     
     public function store(ReviewRequest $request, Review $review){//要検討

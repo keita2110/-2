@@ -1,13 +1,8 @@
 <x-app-layout>
-    <x-slot name="header">
-        検索結果
-    </x-slot>
     <h2 class="text-xl font-semibold text-center py-4">＜ 条件検索結果 ＞</h2>
     <div id="map" class="h-[500px] w-full mb-4 border border-gray-300 rounded-lg shadow-md"></div>
 
-    <div id="ramen-list">
-        <!-- ラーメン店のリストはここに動的に追加されます -->
-    </div>
+    <div id="ramen-list" class="space-y-4 p-4"></div>
 
     <script>
         var map;
@@ -78,17 +73,17 @@
                     
                         data.forEach(shop => {
                             var ramenItem = document.createElement('div');
-                            ramenItem.classList.add('ramen-item');
+                            ramenItem.classList.add('bg-white','border','border-gray-300','p-4','rounded-lg','shadow-md');
                             ramenItem.innerHTML = `
-                                <h3>${shop.name || ''}</h3>
-                                <p>評価: ${shop.review_avg || '評価無し'}</p>
-                                <p>ジャンル: ${shop.category_name || ''}</p>
-                                <p>営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
-                                <p>料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
-                                <p>住所: ${shop.address || ''}</p>
-                                <p>距離: ${parseFloat(shop.distance).toFixed(2)} km</p>
-                                <a href="/shops/${shop.id}">詳細ページへ</a><br>
-                                <button onclick="highlightLocation(${shop.latitude}, ${shop.longitude})">位置を見る</button>
+                                <h3 class="text-lg font-semibold mb-2">${shop.name || ''}</h3>
+                                <p class="text-gray-700">評価: ${shop.review_avg || '評価無し'}</p>
+                                <p class="text-gray-700">ジャンル: ${shop.category_name || ''}</p>
+                                <p class="text-gray-700">営業時間: ${shop.open_time || ''} - ${shop.close_time || ''}</p>
+                                <p class="text-gray-700">料金: ¥${shop.min_price || ''} - ¥${shop.max_price || ''}</p>
+                                <p class="text-gray-700">住所: ${shop.address || ''}</p>
+                                <p class="text-gray-700">距離: ${parseFloat(shop.distance).toFixed(2)} km</p>
+                                <a href="/shops/${shop.id}" class="text-blue-500 hover:underline">詳細ページへ</a><br>
+                                <button onclick="highlightLocation(${shop.latitude}, ${shop.longitude})" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">位置を見る</button>
                             `;
                             ramenList.appendChild(ramenItem);
                     

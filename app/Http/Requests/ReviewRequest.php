@@ -23,7 +23,7 @@ class ReviewRequest extends FormRequest
     {
         return [
             'post.body' => 'required|string|max:300',
-            //'post.shop_id' => 'required|exists:shops,id',//'shops' テーブルの 'id' カラムを参照
+            'post.review_image_url' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

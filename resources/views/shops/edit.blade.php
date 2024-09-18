@@ -1,97 +1,105 @@
 <x-app-layout>
-    <x-slot name="header">
-    　Shop_Edit
-    </x-slot>
-    
-    <h1>店情報の編集</h1>
-    
-    <div class='edit'>
-        <form action="/shops/{{ $shop->id }}/show" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            <div class="name">
-            <h2>ラーメン屋名</h2>
-            <input type="text" name="shop[name]" placeholder="ラーメン屋名" value={{ $shop->name }}></input>
-            <p class="name__error" style="color:red">{{$errors->first('shop.name')}}</p>
-            </div>
-            
-            
-             
-            <div class="shop_informations"> 
-                <h2>店情報</h2>
+    <div class="container mx-auto p-6">
+        <h1 class="text-5xl font-bold mb-6 text-center">店情報の編集</h1>
+        
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <form action="/shops/{{ $shop->id }}/show" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
                 
-                <div class="menu">
-                    <h3>メニュー</h3>
-                    <textarea name="shop[menu]" placeholder="食べたメニューなど自由にどうぞ">{{ $shop->menu }}</textarea>
+                <div class="mb-6">
+                    <h2 class="text-2xl font-semibold mb-2">＜　ラーメン屋名　＞</h2>
+                    <input type="text" name="shop[name]" placeholder="ラーメン屋名" value="{{ old('shop.name', $shop->name) }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @error('shop.name')
+                        <p class="text-red-500 mt-1 text-sm">{{ $message }}</p>
+                    @enderror
                 </div>
                 
-                <div class="location">
-                    <h3>住所</h3>
-                    <textarea name="shop[location]">{{ $shop->location->address }}</textarea>
-                </div>
-                
-                <div class="reserve">
-                    <h3>予約可否</h2>
-                    <input type="text" name="shop[reserve]" placeholder="可 or 不可" value={{ $shop->reserve }}></input>
-                </div>
-                
-                <div class="time">
-                    <h3>営業時間</h3>
-                    <div class="open_time">
-                        <input type="text" name="shop[open_time]" value={{ $shop->open_time }} ></input>～
+                <div class="mb-6">
+                    <h2 class="text-2xl font-semibold mb-2">＜　店情報　＞</h2>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-lg font-medium mb-1">メニュー</h3>
+                        <textarea name="shop[menu]" placeholder="食べたメニューなど自由にどうぞ"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('shop.menu', $shop->menu) }}</textarea>
                     </div>
                     
-                    
-                    <div class="close_time">
-                        <input type="text" name="shop[close_time]" value={{ $shop->close_time }} ></input>
-                    </div>
-                </div>
-                
-                <div class="phone">
-                    <h3>電話番号</h3>
-                    <input type="text" name="shop[phone]" placeholder="000-000-0000" value={{ $shop->phone}}></input>
-                </div>
-                
-                <div class="price">
-                    <h3>価格</h3>
-                    <div class="min_price">
-                        <input type="number" name="shop[min_price]" placeholder="1000" value={{ $shop->min_price }}></input>円～
+                    <div class="mb-4">
+                        <h3 class="text-lg font-medium mb-1">住所</h3>
+                        <textarea name="shop[location]"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('shop.location', $shop->location->address) }}</textarea>
                     </div>
                     
-                     <div class="max_price">
-                        <input type="number" name="shop[max_price]" placeholder="2000" value={{ $shop->max_price }} ></input>円
+                    <div class="mb-4">
+                        <h3 class="text-lg font-medium mb-1">予約可否</h3>
+                        <input type="text" name="shop[reserve]" placeholder="可 or 不可" value="{{ old('shop.reserve', $shop->reserve) }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-lg font-medium mb-1">営業時間</h3>
+                        <div class="flex space-x-2">
+                            <input type="text" name="shop[open_time]" value="{{ old('shop.open_time', $shop->open_time) }}"
+                                class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <span class="flex items-center">～</span>
+                            <input type="text" name="shop[close_time]" value="{{ old('shop.close_time', $shop->close_time) }}"
+                                class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-lg font-medium mb-1">電話番号</h3>
+                        <input type="text" name="shop[phone]" placeholder="000-000-0000" value="{{ old('shop.phone', $shop->phone) }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-lg font-medium mb-1">価格</h3>
+                        <div class="flex space-x-2">
+                            <input type="number" name="shop[min_price]" placeholder="1000" value="{{ old('shop.min_price', $shop->min_price) }}"
+                                class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <span class="flex items-center">円～</span>
+                            <input type="number" name="shop[max_price]" placeholder="2000" value="{{ old('shop.max_price', $shop->max_price) }}"
+                                class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <span class="flex items-center">円</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-lg font-medium mb-1">ラーメンの系統</h3>
+                        <select name="shop[shop_category_id]"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ old('shop.shop_category_id', $shop->shop_category_id) == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium mb-1">ラーメンの種類</h3>
+                        <div class="space-y-2">
+                            @foreach($tags as $tag)
+                                <input type="checkbox" value="{{ $tag->id }}" name="shop_tags_array[]"
+                                    class="mr-2 leading-tight" {{ in_array($tag->id, old('shop_tags_array', [])) ? 'checked' : '' }}>
+                                <span class="text-gray-700">{{ $tag->name }}</span>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
                 
-                <div class="category">
-                <h3>ラーメンの系統</h3>
-                <select name="shop[shop_category_id]">
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold mb-2">画像</h2>
+                    <input type="file" name="shop_image" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 
-                <div class="tag">
-                    <h3>ラーメンの種類</h3>
-                    @foreach($tags as $tag)
-                        <label>
-                            <input type="checkbox" value="{{ $tag->id }}" name="shop_tags_array[]">
-                                {{ $tag->name }}
-                            </input>
-                        </label>
-                    @endforeach
-                </div>
-                
-            </div>
-            
-            <div class="image">
-                <h2>画像</h2>
-                <input type="file" name="shop_image" value="{{ $shop->shop_image_url }}">
-            </div>
-            
-            <input type="submit" value="保存"/>
-        </form>
+                <button type="submit"
+                    class="bg-blue-500 font-semibold text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300 ease-in-out">
+                    保存
+                </button>
+            </form>
+        </div>
     </div>
-    
 </x-app-layout>

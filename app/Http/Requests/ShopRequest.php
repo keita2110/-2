@@ -24,6 +24,7 @@ class ShopRequest extends FormRequest
     {
         return [
             'shop.name' => 'required|string|max:50',
+            'shop.shop_image_url' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

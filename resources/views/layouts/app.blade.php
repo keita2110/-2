@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>探麵</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -16,9 +16,11 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
         <style>
-            .custom-size {
-                width: 380px;
-                heigth: 380px;
+            .review-image {
+                height: 400px;
+                width: 400px;
+                object-fit: cover;
+                border-radius: 0.5rem;
             }
         </style>
     </head>
