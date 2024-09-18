@@ -34,11 +34,11 @@ class LocationController extends Controller
             ->orderBy('subquery.distance')
             ->limit(5)
             ->with(['shops' => function($query) {
-                $query->select('id', 'location_id', 'name', 'open_time', 'close_time', 'min_price', 'max_price', 'review_avg')
-                      ->with(['shop_category']);
+                $query->select('id', 'location_id', 'name', 'open_time', 'close_time', 'min_price', 'max_price', 'review_avg','shop_category_id')
+                      ->with('shop_category')->get();
             }])
             ->get();
-    
+        
         $result = $ramens->map(function($ramen) {
             return [
                 'latitude' => $ramen->latitude,
