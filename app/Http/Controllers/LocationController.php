@@ -23,27 +23,29 @@ class LocationController extends Controller
     public function getNearRamen(Request $request) {
         $latitude = $request->input('latitude');
         $longitude = $request->input('longitude');
-        
-        // サブクエリでラーメン店の位置と距離を計算
-        $ramens = Location::select('locations.*')
-            ->selectRaw('(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
-            ->having('distance', '<', 100)
-            ->orderBy('distance')
+    
+        $ramens = Location::select('subquery.*')
+            ->fromSub(function ($query) use ($latitude, $longitude) {
+                $query->select('locations.*')
+                    ->selectRaw('(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance', [$latitude, $longitude, $latitude])
+                    ->from('locations');
+            }, 'subquery')
+            ->where('subquery.distance', '<', 100)
+            ->orderBy('subquery.distance')
             ->limit(5)
+            ->with(['shops' => function($query) {
+                $query->select('id', 'location_id', 'name', 'open_time', 'close_time', 'min_price', 'max_price', 'review_avg')
+                      ->with(['shop_category']);
+            }])
             ->get();
     
-        // 各ラーメン店の情報を取得
         $result = $ramens->map(function($ramen) {
-            $shops = Shop::with('shop_category')
-                ->where('location_id', $ramen->id)
-                ->get();
-    
             return [
                 'latitude' => $ramen->latitude,
                 'longitude' => $ramen->longitude,
-                'distance' => $ramen->distance,
+                'distance' => $ramen->distance, 
                 'address' => $ramen->address,
-                'shops' => $shops->map(function($shop) {
+                'shops' => $ramen->shops->map(function($shop) {
                     return [
                         'id' => $shop->id,
                         'name' => $shop->name,
